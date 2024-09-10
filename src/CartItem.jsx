@@ -20,20 +20,43 @@ const CartItem = ({ onContinueShopping }) => {
   const handleContinueShopping = (e) => {};
 
   const handleIncrement = (item) => {
-    dispatch(updateQuantity(item));
-    console.log("sumando");
+    const updatedItem = {
+      ...item,
+      quantity: item.quantity + 1,
+    };
+    dispatch(updateQuantity(updatedItem));
   };
 
-  const handleDecrement = (item) => {};
+  const handleDecrement = (item) => {
+    if (item.quantity === 1) {
+      dispatch(removeItem(item.name));
+      console.log("Item eliminado porque llegó a 0");
+    } else {
+      // Si no, restamos 1 a la cantidad
+      const updatedItem = {
+        ...item,
+        quantity: item.quantity - 1,
+      };
+      dispatch(updateQuantity(updatedItem));
+      console.log("Cantidad actualizada");
+    }
+  };
 
-  const handleRemove = (item) => {};
+  const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
+    console.log("borrado", cart);
+  };
 
   const handleCheckoutShopping = (e) => {
     alert("Functionality to be added for future reference");
   };
 
   // Calculate total cost based on quantity for an item
-  const calculateTotalCost = (item) => {};
+  const calculateTotalCost = (item) => {
+    const numericCost = parseFloat(item.cost.replace("$", ""));
+    const itemTotalCost = numericCost * item.quantity;
+    return itemTotalCost;
+  };
 
   return (
     <div className="cart-container">
@@ -84,12 +107,17 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button
           className="get-started-button"
-          onClick={(e) => handleContinueShopping(e)}
+          onClick={(e) => onContinueShopping(e)}
         >
           Continue Shopping
         </button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button
+          className="get-started-button1"
+          onClick={() => handleCheckoutShopping()}
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );
